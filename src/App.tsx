@@ -13,21 +13,28 @@ import { CreateTeam } from "./Components/dashboard/CreateTeam";
 function App() {
   return (
     <BrowserRouter>
-    <UserProvider>
+      <UserProvider>
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />}></Route>
             <Route path="/signup" element={<SignUp />}></Route>
             <Route path="/login" element={<Login />}></Route>
           </Route>
-          <Route path="/dashboard" element={<TeamProvider><Dashboard /></TeamProvider>}>
+          <Route
+            path="/dashboard"
+            element={
+              <TeamProvider>
+                <Dashboard />
+              </TeamProvider>
+            }
+          >
             <Route index element={<Teams />}></Route>
             <Route path="join" element={<JoinTeam />}></Route>
-            <Route path="create" element={<CreateTeam/>}></Route>
+            <Route path="create" element={<CreateTeam />}></Route>
           </Route>
         </Routes>
-    </UserProvider>
-      </BrowserRouter>
+      </UserProvider>
+    </BrowserRouter>
   );
 }
 

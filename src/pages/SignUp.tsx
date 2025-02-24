@@ -8,10 +8,9 @@ interface SignUpResponse {
 }
 
 export const SignUp = () => {
-  const {email,username,password,setEmail,setUsername,setPassword} = getUser();
+  const { email, username, password, setEmail, setUsername, setPassword } =
+    getUser();
   const navigate = useNavigate();
-
-
 
   const handleOnSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,8 +23,8 @@ export const SignUp = () => {
       const data: SignUpResponse = await response.json();
       console.log(data);
 
-      if(data.success){
-        localStorage.setItem("token",data.token)
+      if (data.success) {
+        localStorage.setItem("token", data.token);
 
         setTimeout(() => {
           alert("User registered successfully");
@@ -34,12 +33,9 @@ export const SignUp = () => {
           setUsername("");
           navigate("/dashboard");
         }, 1000);
-      }
-      else{
+      } else {
         throw new Error("Cannot Login");
       }
-
-      
     } catch (error) {
       alert("Error occurred during sign-up");
     }

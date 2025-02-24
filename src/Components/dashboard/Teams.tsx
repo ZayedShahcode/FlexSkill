@@ -8,8 +8,7 @@ export default function Teams() {
   const teamId = user?.teamId;
 
   useEffect(() => {
-      fetchUserTeams();
-    
+    fetchUserTeams();
   }, [teamId]);
 
   return (
@@ -26,13 +25,12 @@ export default function Teams() {
                   Join Team
                 </button>
               </Link>
-             
+
               <Link to="./create">
                 <button className="h-full bg-gray-800 border text-white font-semibold hover:bg-white hover:text-black hover:border-stone-900 rounded-lg w-20 h-6 md:w-28 md:h-8 grid place-items-center md:text-xl">
                   Create
                 </button>
               </Link>
-             
             </>
           ) : (
             userTeams.map((team) => (
