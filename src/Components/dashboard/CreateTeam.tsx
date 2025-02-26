@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export const CreateTeam = () => {
   const [teamName, setTeamName] = useState<string>("");
   const [teamSize, setTeamSize] = useState<number>(2);
+  const [teamDescription,setTeamDescription] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = getUser();
   const navigate = useNavigate();
@@ -16,12 +17,15 @@ export const CreateTeam = () => {
     } else if (name === "teamSize") {
       setTeamSize(Number(value));
     }
+    else if(name==="teamDescription"){
+      setTeamDescription(value);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const teamData: TeamType = { teamname: teamName, teamsize: teamSize };
+    const teamData: TeamType = { teamname: teamName, teamsize: teamSize, teamDescription };
 
     try {
       const response = await fetch(
@@ -31,15 +35,14 @@ export const CreateTeam = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(teamData),
+          body: JSON.stringify({...teamData,userId:user.id}),
         }
       );
 
       if (response.ok) {
         const userId = user.id;
         const data = await response.json();
-        console.log(data.newteam);
-        const teamId = data.newteam.id;
+        const teamId = data.newTeam.id;
         const innerResponse = await fetch(
           `${import.meta.env.VITE_URL_BACKEND}/team/join`,
           {
@@ -96,6 +99,16 @@ export const CreateTeam = () => {
             placeholder="Team Size"
             className="w-64 h-10 p-2 border border-black"
             value={teamSize}
+            onChange={handleOnChange}
+            min={2}
+            required
+          />
+          <input
+            type="text"
+            name="teamDescription"
+            placeholder="Description"
+            className="w-64 h-10 p-2 border border-black"
+            value={teamDescription}
             onChange={handleOnChange}
             min={2}
             required

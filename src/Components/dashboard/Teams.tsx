@@ -6,7 +6,7 @@ import { getUser } from "../../context/UserContext";
 export default function Teams() {
   const { user, userTeams, fetchUserTeams } = getUser();
   const teamId = user?.teamId;
-
+  
   useEffect(() => {
     fetchUserTeams();
   }, [teamId]);
