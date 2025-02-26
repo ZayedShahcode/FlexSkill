@@ -36,14 +36,27 @@ export default function Team({ team, teamType }: TeamProps) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ userId ,teamId}),
       }
     );
+    console.log(await response.json())
     if (response.ok) {
       setUser({ ...user, teamId: null });
-      console.log(user);
     }
   };
+
+  const onHandleDelete = async ()=>{
+    const response = await fetch(`${import.meta.env.VITE_URL_BACKEND}/team`,{
+      method:"DELETE",
+      headers:{
+        "Content-Type" : "application/json"
+      },
+      body:JSON.stringify({teamId}),
+    })
+    if(response.ok){
+      setUser({...user,teamId:null})
+    }
+  }
 
   return (
     <div className="border border-gray-500  w-48 h-64 p-4">
@@ -54,6 +67,10 @@ export default function Team({ team, teamType }: TeamProps) {
           <button>View</button>
           <br />
           <button onClick={onHandleLeave}>Leave</button>
+          <br />
+          {team.teamLeader === user.id? (
+            <button onClick={onHandleDelete}>Delete Team</button>
+          ):<></>}
         </div>
       ) : (
         <button onClick={onHandleJoin}>Join</button>

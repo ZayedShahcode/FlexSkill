@@ -28,6 +28,8 @@ export interface TeamType {
   id?: number;
   teamname: string;
   teamsize: number;
+  teamDescription: string;
+  teamLeader ?: number;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
