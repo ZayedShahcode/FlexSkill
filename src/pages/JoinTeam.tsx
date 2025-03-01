@@ -5,7 +5,7 @@ import { getUser } from "../context/UserContext";
 
 const JoinTeam = () => {
   const navigate = useNavigate();
-  const { user, verifyCookie } = getUser();
+  const {  verifyCookie } = getUser();
 
   useEffect(() => {
     verifyCookie();
@@ -13,7 +13,6 @@ const JoinTeam = () => {
 
   return (
     <>
-      <div>JoinTeam</div>
       <AllTeams></AllTeams>
     </>
   );

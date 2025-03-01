@@ -29,7 +29,8 @@ export interface TeamType {
   teamname: string;
   teamsize: number;
   teamDescription: string;
-  teamLeader ?: number;
+  teamLeader ?: string;
+  members ?: Array<number>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -83,7 +84,7 @@ export function UserProvider({ children }: UserProviderProps) {
         throw new Error("Failed to fetch teams");
       }
       const data = await response.json();
-      setUserTeams(data.team);
+      setUserTeams(data.userTeam);
     } catch (error) {
       console.error("Error fetching teams:", error);
     }

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { getUser, TeamType } from "../../context/UserContext";
+import { Button } from "./Button";
 
 interface TeamProps {
   team: TeamType;
@@ -58,23 +59,33 @@ export default function Team({ team, teamType }: TeamProps) {
     }
   }
 
+  const onHandleView = ()=>{
+    console.log("View");
+  }
+
   return (
-    <div className="border border-gray-500  w-48 h-64 p-4">
+    <div className="border border-gray-500 flex flex-col justify-between w-96 h-64 p-4">
+      <div className="flex flex-col gap-4" >
       <h1 className="text-xl font-bold">{team.teamname}</h1>
-      <p>{team.teamsize}</p>
+      <p><b>Size</b> : {team.members?.length} <span>(max: {team.teamsize}) </span></p>
+      {teamType==="user"?<p ><b>Leader</b>: {team.teamLeader}</p>:<></>}
+      <p><b>About</b>: {team.teamDescription}</p>
+      </div>
+      <div className="flex gap-4 justify-around ">
       {teamType === "user" ? (
-        <div>
-          <button>View</button>
+        <>
+          <Button onHandleClick={onHandleView} btncolor="green" >View</Button>
           <br />
-          <button onClick={onHandleLeave}>Leave</button>
+          <Button onHandleClick={onHandleLeave} btncolor="blue">Leave</Button>
           <br />
-          {team.teamLeader === user.id? (
-            <button onClick={onHandleDelete}>Delete Team</button>
+          {team.teamLeader == user.username? (
+           <Button onHandleClick={onHandleDelete} btncolor="red">Delete</Button>
           ):<></>}
-        </div>
+          </>
       ) : (
-        <button onClick={onHandleJoin}>Join</button>
+        <Button onHandleClick={onHandleJoin} btncolor="green">Join</Button>
       )}
+      </div>
     </div>
   );
 }

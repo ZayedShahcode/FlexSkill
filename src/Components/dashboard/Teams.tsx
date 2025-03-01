@@ -1,22 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Team from "./Team";
 import { Link } from "react-router-dom";
 import { getUser } from "../../context/UserContext";
 
 export default function Teams() {
   const { user, userTeams, fetchUserTeams } = getUser();
+  const [loading,setLoading] = useState(false);
   const teamId = user?.teamId;
   
   useEffect(() => {
+    setLoading(true);
     fetchUserTeams();
+    setLoading(false);
   }, [teamId]);
 
   return (
     <div>
+      
       <div className="border border-stone-800 h-auto m-4">
         <div className="flex items-center justify-between m-2">
           <h1 className="text-2xl m-2 font-bold">Your Teams</h1>
         </div>
+        {loading?(<>Loading</>):
         <div className="flex flex-wrap items-center justify-between gap-8 m-2">
           {userTeams.length === 0 ? (
             <>
@@ -38,7 +43,10 @@ export default function Teams() {
             ))
           )}
         </div>
+      }
       </div>
     </div>
+
+    
   );
 }
