@@ -2,6 +2,8 @@ import { createContext, ReactNode, useContext, useState } from "react";
 import { TeamType } from "./UserContext";
 
 interface teamContextType {
+  userTeam: TeamType | null;
+  setUserTeam: React.Dispatch<React.SetStateAction<TeamType | null>>;
   allTeams: Array<TeamType>;
   setAllTeams: React.Dispatch<React.SetStateAction<Array<TeamType>>>;
   fetchAllTeams: () => Promise<void>;
@@ -15,10 +17,11 @@ interface UserProviderProps {
 
 export function TeamProvider({ children }: UserProviderProps) {
   const [allTeams, setAllTeams] = useState<TeamType[]>([]);
+  const [userTeam,setUserTeam] = useState<TeamType | null>(null);
 
   const fetchAllTeams = async () => {
     try {
-      const response = await fetch("http://localhost:3000/team", {
+      const response = await fetch(`${import.meta.env.VITE_URL_BACKEND}/team`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -38,6 +41,8 @@ export function TeamProvider({ children }: UserProviderProps) {
   };
 
   const contextData: teamContextType = {
+    userTeam,
+    setUserTeam,
     allTeams,
     setAllTeams,
     fetchAllTeams,

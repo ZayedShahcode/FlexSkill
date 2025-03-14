@@ -10,6 +10,7 @@ import JoinTeam from "./pages/JoinTeam";
 import { UserProvider } from "./context/UserContext";
 import { TeamProvider } from "./context/TeamContext";
 import { CreateTeam } from "./Components/dashboard/CreateTeam";
+import { ViewTeam } from "./pages/ViewTeam";
 function App() {
   return (
     <BrowserRouter>
@@ -31,6 +32,7 @@ function App() {
             <Route index element={<Teams />}></Route>
             <Route path="join" element={<JoinTeam />}></Route>
             <Route path="create" element={<CreateTeam />}></Route>
+            <Route path="view" element={<ViewTeam/>}></Route>
           </Route>
         </Routes>
       </UserProvider>

@@ -29,7 +29,10 @@ export interface TeamType {
   teamname: string;
   teamsize: number;
   teamDescription: string;
-  teamLeader ?: string;
+  teamLeader ?: number;
+  leaderName ?: string;
+  githubLink : string;
+  details ?: string;
   members ?: Array<number>;
 }
 
@@ -58,7 +61,7 @@ export function UserProvider({ children }: UserProviderProps) {
       alert("Please Login");
       navigate("/login");
     }
-    const response = await fetch("http://localhost:3000/sign/verify", {
+    const response = await fetch(`${import.meta.env.VITE_URL_BACKEND}/sign/verify`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -79,7 +82,7 @@ export function UserProvider({ children }: UserProviderProps) {
         setUserTeams([]);
         return;
       }
-      const response = await fetch(`http://localhost:3000/dash/${teamId}`);
+      const response = await fetch(`${import.meta.env.VITE_URL_BACKEND}/dash/${teamId}`);
       if (!response.ok) {
         throw new Error("Failed to fetch teams");
       }
