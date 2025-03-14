@@ -1,6 +1,6 @@
-# FlexSkill Frontend
-
 A modern web application for connecting skilled developers and forming teams for projects.
+
+# FlexSkill Frontend
 
 ## Tech Stack
 
