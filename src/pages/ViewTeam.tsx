@@ -1,30 +1,50 @@
 import { useNavigate } from "react-router-dom";
 import { getTeams } from "../context/TeamContext";
-import { getUser } from "../context/UserContext";
+import { useEffect, useState } from "react";
+
+interface TeamMember {
+  id: number;
+  username: string;
+}
 
 export const ViewTeam = () => {
   const { userTeam } = getTeams();
-  const { user } = getUser();
   const navigate = useNavigate();
+  const [members, setMembers] = useState<TeamMember[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchMembers = async () => {
+      if (!userTeam?.id) return;
+      
+      setLoading(true);
+      try {
+        const response = await fetch(`${import.meta.env.VITE_URL_BACKEND}/team/${userTeam.id}`);
+        if (!response.ok) throw new Error('Failed to fetch team members');
+        
+        const data = await response.json();
+        setMembers(data.members);
+      } catch (error) {
+        console.error('Error fetching team members:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMembers();
+  }, [userTeam?.id]);
 
   const handleBack = () => {
     navigate("../");
   };
 
-  const handleLeave = async () => {
-    const response = await fetch(
-      `${import.meta.env.VITE_URL_BACKEND}/team/join`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ userId: user.id, teamId: userTeam?.id }),
-      }
-    );
-    if (response.ok) {
-      navigate("../");
-    }
+  const handleMemberClick = (memberId: number) => {
+    // Store the current team view state
+    sessionStorage.setItem('lastTeamView', JSON.stringify({
+      teamId: userTeam?.id,
+      teamName: userTeam?.teamname
+    }));
+    navigate(`/dashboard/profile/${memberId}`);
   };
 
   if (!userTeam) {
@@ -61,14 +81,6 @@ export const ViewTeam = () => {
               Led by <span className="font-semibold">{userTeam.leaderName}</span>
             </p>
           </div>
-          {user.id !== userTeam.teamLeader && (
-            <button
-              onClick={handleLeave}
-              className="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-            >
-              Leave Team
-            </button>
-          )}
         </div>
 
         {/* Team Stats */}
@@ -76,7 +88,7 @@ export const ViewTeam = () => {
           <div className="bg-gray-50 p-4 rounded-lg">
             <h2 className="text-xl font-semibold mb-2">Team Size</h2>
             <p className="text-gray-700">
-              {userTeam.members?.length || 0} / {userTeam.teamsize} members
+              {members.length} / {userTeam.teamsize} members
             </p>
           </div>
           <div className="bg-gray-50 p-4 rounded-lg">
@@ -110,15 +122,41 @@ export const ViewTeam = () => {
         <div>
           <h2 className="text-xl font-semibold mb-3">Team Members</h2>
           <div className="bg-gray-50 p-4 rounded-lg">
-            {userTeam.members && userTeam.members.length > 0 ? (
+            {loading ? (
+              <div className="flex justify-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-stone-800"></div>
+              </div>
+            ) : members.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {/* Note: This is a placeholder for member display. You'll need to fetch actual member details */}
+                {/* Leader */}
                 <div className="flex items-center space-x-2">
                   <div className="w-8 h-8 bg-stone-800 rounded-full flex items-center justify-center text-white">
                     {userTeam.leaderName?.[0]?.toUpperCase()}
                   </div>
-                  <span className="font-medium">{userTeam.leaderName} (Leader)</span>
+                  <button
+                    onClick={() => handleMemberClick(userTeam.teamLeader!)}
+                    className="font-medium hover:text-blue-600 transition-colors"
+                  >
+                    {userTeam.leaderName} (Leader)
+                  </button>
                 </div>
+                
+                {/* Other Members */}
+                {members.map((member) => (
+                  member.username !== userTeam.leaderName && (
+                    <div key={member.id} className="flex items-center space-x-2">
+                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white">
+                        {member.username[0]?.toUpperCase()}
+                      </div>
+                      <button
+                        onClick={() => handleMemberClick(member.id)}
+                        className="font-medium hover:text-blue-600 transition-colors"
+                      >
+                        {member.username}
+                      </button>
+                    </div>
+                  )
+                ))}
               </div>
             ) : (
               <p className="text-gray-500">No members found</p>

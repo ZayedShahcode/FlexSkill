@@ -1,5 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import { getUser } from "../context/UserContext";
+import { useState } from "react";
 
 interface SignUpResponse {
   message: string;
@@ -10,6 +11,7 @@ interface SignUpResponse {
 export const SignUp = () => {
   const { email, username, password, setEmail, setUsername, setPassword } =
     getUser();
+  const [githubProfile, setGithubProfile] = useState<string>("");
   const navigate = useNavigate();
 
   const handleOnSubmit = async (e: React.FormEvent) => {
@@ -18,7 +20,7 @@ export const SignUp = () => {
       const response = await fetch(`${import.meta.env.VITE_URL_BACKEND}/sign/new`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
+        body: JSON.stringify({ username, email, password, githubProfile }),
       });
       const data: SignUpResponse = await response.json();
 
@@ -29,6 +31,7 @@ export const SignUp = () => {
           setEmail("");
           setPassword("");
           setUsername("");
+          setGithubProfile("");
           navigate("/dashboard");
         }, 1000);
       } else {
@@ -101,6 +104,24 @@ export const SignUp = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
+              </div>
+            </div>
+
+            <div>
+              <label htmlFor="githubProfile" className="block text-sm font-medium text-gray-700">
+                GitHub Profile URL
+              </label>
+              <div className="mt-1">
+                <input
+                  type="url"
+                  name="githubProfile"
+                  id="githubProfile"
+                  placeholder="https://github.com/yourusername"
+                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  value={githubProfile}
+                  onChange={(e) => setGithubProfile(e.target.value)}
+                />
+                <p className="mt-1 text-sm text-gray-500">Optional: Add your GitHub profile URL</p>
               </div>
             </div>
 

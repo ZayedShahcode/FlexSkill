@@ -6,6 +6,7 @@ interface User {
   username: string;
   email: string;
   teamId?: number | null;
+  githubProfile?: string;
 }
 interface UserContextType {
   username: string;
@@ -22,6 +23,7 @@ interface UserContextType {
   userTeams: TeamType[];
   setUserTeams: React.Dispatch<React.SetStateAction<TeamType[]>>;
   fetchUserTeams: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 export interface TeamType {
@@ -93,6 +95,27 @@ export function UserProvider({ children }: UserProviderProps) {
     }
   };
 
+  const logout = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_URL_BACKEND}/sign/logout`, {
+        method: "POST",
+        credentials: "include",
+      });
+      
+      if (response.ok) {
+        localStorage.removeItem("token");
+        setUser({ username: "", email: "", teamId: null });
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setTeamId(null);
+        setUserTeams([]);
+      }
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   const contextData: UserContextType = {
     username,
     email,
@@ -108,6 +131,7 @@ export function UserProvider({ children }: UserProviderProps) {
     userTeams,
     setUserTeams,
     fetchUserTeams,
+    logout,
   };
   return (
     <UserContext.Provider value={contextData}>{children}</UserContext.Provider>

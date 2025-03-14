@@ -62,7 +62,7 @@ export default function Team({ team, teamType }: TeamProps) {
 
   const onHandleView = () => {
     setUserTeam(team);
-    navigate("./view");
+    navigate("../../dashboard/view");
   };
 
   return (
@@ -84,7 +84,7 @@ export default function Team({ team, teamType }: TeamProps) {
         </div>
 
         {/* Team Description */}
-        <p className="text-gray-600 mb-4 line-clamp-2">{team.teamDescription}</p>
+        <p className="text-gray-600 mb-4 line-clamp-3">{team.teamDescription}</p>
 
         {/* GitHub Link */}
         <div className="flex items-center text-sm text-gray-500 mb-6">
@@ -133,12 +133,20 @@ export default function Team({ team, teamType }: TeamProps) {
               )}
             </>
           ) : (
+            <>
+            <button
+                onClick={onHandleView}
+                className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                View Details
+            </button>
             <button
               onClick={onHandleJoin}
               className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >
               Join Team
             </button>
+            </>
           )}
         </div>
       </div>
